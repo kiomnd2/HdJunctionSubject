@@ -1,0 +1,52 @@
+package subject.hdjunction.subject.domain;
+
+
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+public class Patient {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hsptl_id")
+    private Hospital hospital;
+
+    // 환자명
+    @Column(name = "ptnt_nm")
+    private String patientName;
+
+    // 환자등록번호
+    @Column(name = "ptnt_no")
+    private String patientNo;
+
+    // 성별코드
+    @Column(name = "gndr_cd")
+    private String genderCode;
+
+    // 생년월일
+    @Column(name = "brth_dt")
+    private String birthDate;
+
+    // 핸드폰 번호
+    @Column(name = "phn_no")
+    private String PhoneNo;
+
+    @Builder
+    public Patient(Hospital hospital, String patientName, String patientNo, String genderCode, String birthDate, String phoneNo) {
+        this.hospital = hospital;
+        this.patientName = patientName;
+        this.patientNo = patientNo;
+        this.genderCode = genderCode;
+        this.birthDate = birthDate;
+        this.PhoneNo = phoneNo;
+    }
+}
