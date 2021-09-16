@@ -41,7 +41,7 @@ public class PatientController {
     @DeleteMapping("/api/v1/patient/{id}")
     public ResponseEntity<Response<String>> deleteInfo(@PathVariable(name = "id") Long patientId) {
         patientService.removePatient(patientId);
-        return ResponseEntity.ok().body(Response.success(Codes.E4000.desc));
+        return ResponseEntity.ok().body(Response.success(Codes.D2000.desc));
     }
 
 

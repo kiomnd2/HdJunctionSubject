@@ -5,11 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import subject.hdjunction.subject.codes.Codes;
 import subject.hdjunction.subject.controller.response.Response;
-import subject.hdjunction.subject.dto.PatientDto;
 import subject.hdjunction.subject.dto.VisitDto;
 import subject.hdjunction.subject.service.VisitService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +34,6 @@ public class VisitController {
     @DeleteMapping("/api/v1/visit/{id}")
     public ResponseEntity<Response<String>> deleteInfo(@PathVariable(name = "id") Long visitId) {
         visitService.removeVisit(visitId);
-        return ResponseEntity.ok().body(Response.success(Codes.E4000.desc));
+        return ResponseEntity.ok().body(Response.success(Codes.D2000.desc));
     }
 }
