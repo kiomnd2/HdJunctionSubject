@@ -25,17 +25,18 @@ public class VisitController {
     }
 
     @GetMapping("/api/v1/visit/{id}")
-    public ResponseEntity<Response<VisitDto>> searchInfo(@PathVariable(name = "id") Long patientId) {
-        return ResponseEntity.ok().body(Response.success(visitService.getVisit(patientId)));
+    public ResponseEntity<Response<VisitDto>> searchInfo(@PathVariable(name = "id") Long visitId) {
+        return ResponseEntity.ok().body(Response.success(visitService.getVisit(visitId)));
     }
 
     @PutMapping("/api/v1/visit/{id}")
-    public ResponseEntity<Response<VisitDto>> updateInfo(@PathVariable(name = "id") Long patientId, VisitDto visitDto) {
-        return ResponseEntity.ok().body(Response.success(visitService.updateVisit(patientId, visitDto)));
+    public ResponseEntity<Response<VisitDto>> updateInfo(@PathVariable(name = "id") Long visitId, VisitDto visitDto) {
+        return ResponseEntity.ok().body(Response.success(visitService.updateVisit(visitId, visitDto)));
     }
 
     @DeleteMapping("/api/v1/visit/{id}")
-    public ResponseEntity<Response<String>> deleteInfo(@PathVariable(name = "id") Long patientId) {
+    public ResponseEntity<Response<String>> deleteInfo(@PathVariable(name = "id") Long visitId) {
+        visitService.removeVisit(visitId);
         return ResponseEntity.ok().body(Response.success(Codes.E4000.desc));
     }
 }
