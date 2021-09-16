@@ -47,6 +47,7 @@ public class VisitService {
         Visit savedVisits = visitRepository.save(visits);
 
         return VisitDto.builder()
+                .id(savedVisits.getId())
                 .visitStateCode(savedVisits.getVisitStateCode())
                 .hospitalId(savedVisits.getHospital().getId())
                 .patientId(savedVisits.getPatient().getId())
@@ -70,14 +71,14 @@ public class VisitService {
         Visit visit = visitRepository.findById(visitId)
                 .orElseThrow(NotFoundVisitException::new);
 
-        Visit updatedvisit = visit.updatePatient(visitDto);
-        visitRepository.save(updatedvisit);
+        Visit updatedVisit = visit.updatePatient(visitDto);
+        visitRepository.save(updatedVisit);
         return VisitDto.builder()
-                .id(updatedvisit.getId())
-                .visitStateCode(updatedvisit.getVisitStateCode())
-                .receptionDateTime(updatedvisit.getReceptionDateTime())
-                .patientId(updatedvisit.getPatient().getId())
-                .hospitalId(updatedvisit.getHospital().getId())
+                .id(updatedVisit.getId())
+                .visitStateCode(updatedVisit.getVisitStateCode())
+                .receptionDateTime(updatedVisit.getReceptionDateTime())
+                .patientId(updatedVisit.getPatient().getId())
+                .hospitalId(updatedVisit.getHospital().getId())
                 .build();
     }
 
