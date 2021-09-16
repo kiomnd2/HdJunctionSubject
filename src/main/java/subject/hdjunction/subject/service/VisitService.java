@@ -11,11 +11,13 @@ import subject.hdjunction.subject.dto.PatientDto;
 import subject.hdjunction.subject.dto.VisitDto;
 import subject.hdjunction.subject.exception.NotFoundHospitalException;
 import subject.hdjunction.subject.exception.NotFoundPatientException;
+import subject.hdjunction.subject.exception.NotFoundVisitException;
 import subject.hdjunction.subject.repository.HospitalRepository;
 import subject.hdjunction.subject.repository.PatientRepository;
 import subject.hdjunction.subject.repository.VisitRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,15 +54,34 @@ public class VisitService {
                 .build();
     }
 
-    public VisitDto getVisit(Long patientId) {
-        return null;
+    public VisitDto getVisit(Long visitId) {
+        Visit visit = visitRepository.findById(visitId)
+                .orElseThrow(NotFoundVisitException::new);
+        return VisitDto.builder()
+                .id(visit.getId())
+                .visitStateCode(visit.getVisitStateCode())
+                .receptionDateTime(visit.getReceptionDateTime())
+                .patientId(visit.getPatient().getId())
+                .hospitalId(visit.getHospital().getId())
+                .build();
     }
 
-    public VisitDto updateVisit(Long patientId, VisitDto visitDto) {
-        return null;
+    public VisitDto updateVisit(Long visitId, VisitDto visitDto) {
+        Visit visit = visitRepository.findById(visitId)
+                .orElseThrow(NotFoundVisitException::new);
+
+        Visit updatedvisit = visit.updatePatient(visitDto);
+        visitRepository.save(updatedvisit);
+        return VisitDto.builder()
+                .id(updatedvisit.getId())
+                .visitStateCode(updatedvisit.getVisitStateCode())
+                .receptionDateTime(updatedvisit.getReceptionDateTime())
+                .patientId(updatedvisit.getPatient().getId())
+                .hospitalId(updatedvisit.getHospital().getId())
+                .build();
     }
 
     public void removeVisit(Long visitId) {
-
+        visitRepository.deleteById(visitId);
     }
 }

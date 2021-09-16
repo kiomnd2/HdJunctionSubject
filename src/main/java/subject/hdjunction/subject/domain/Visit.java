@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import subject.hdjunction.subject.dto.VisitDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -37,6 +38,12 @@ public class Visit {
     // 방문상태코드
     @Column(name = "vst_st_cd")
     private String visitStateCode;
+
+    public Visit updatePatient(VisitDto visitDto) {
+        this.receptionDateTime = visitDto.getReceptionDateTime();
+        this.visitStateCode = visitDto.getVisitStateCode();
+        return this;
+    }
 
     @Builder
     public Visit(Hospital hospital, Patient patient, LocalDateTime receptionDateTime, String visitStateCode) {
