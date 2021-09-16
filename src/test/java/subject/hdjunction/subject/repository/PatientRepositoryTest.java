@@ -54,7 +54,7 @@ class PatientRepositoryTest {
                 .patientNo(patientNo)
                 .birthDate(birthDate)
                 .genderCode(genderCode)
-                .phoneNo(phoneNo)
+                .phoneNumber(phoneNo)
                 .hospital(this.hospital)
                 .build();
 
