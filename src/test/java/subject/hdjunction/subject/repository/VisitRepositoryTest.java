@@ -67,7 +67,7 @@ class VisitRepositoryTest {
                 .patientNo(patientNo)
                 .birthDate(birthDate)
                 .genderCode(genderCode)
-                .phoneNo(phoneNo)
+                .phoneNumber(phoneNo)
                 .hospital(this.hospital)
                 .build();
 
@@ -76,7 +76,7 @@ class VisitRepositoryTest {
 
     @Test
     void insertVisitInfoTest() throws Throwable {
-        final LocalDateTime receptionDateTime = LocalDateTime.now();
+        LocalDateTime receptionDateTime = LocalDateTime.of(2021, 9,16, 12, 59,59);
         final String visitStateCode = "1";
         Visit visit = Visit.builder()
                 .receptionDateTime(receptionDateTime)
@@ -95,6 +95,35 @@ class VisitRepositoryTest {
         Assertions.assertThat(selectedVisit.getPatient().getPatientName()).isEqualTo(this.patient.getPatientName());
     }
 
+    @Test
+    void findLastDatePatientTest() throws Throwable {
+        LocalDateTime receptionDateTime = LocalDateTime.of(2021, 9,16, 12, 59,59);
+        final String visitStateCode = "1";
+        Visit visit = Visit.builder()
+                .receptionDateTime(receptionDateTime)
+                .visitStateCode(visitStateCode)
+                .hospital(this.hospital)
+                .patient(this.patient)
+                .build();
+
+        visitRepository.save(visit);
+
+        final LocalDateTime receptionDateTime2 = receptionDateTime.plusDays(1);
+        final String visitStateCode2= "2";
+        Visit visit2 = Visit.builder()
+                .receptionDateTime(receptionDateTime2)
+                .visitStateCode(visitStateCode2)
+                .hospital(this.hospital)
+                .patient(this.patient)
+                .build();
+
+        visitRepository.save(visit2);
+
+        Visit lastVisit = visitRepository.findTopByPatientOrderByReceptionDateTimeDesc(this.patient).get();
+
+        Assertions.assertThat(receptionDateTime2).isEqualTo(lastVisit.getReceptionDateTime());
+        Assertions.assertThat(visitStateCode2).isEqualTo(lastVisit.getVisitStateCode());
+    }
 
 
 }
