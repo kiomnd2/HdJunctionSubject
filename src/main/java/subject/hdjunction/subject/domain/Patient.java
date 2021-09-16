@@ -38,15 +38,15 @@ public class Patient {
 
     // 핸드폰 번호
     @Column(name = "phn_no")
-    private String PhoneNo;
+    private String PhoneNumber;
 
     @Builder
-    public Patient(Hospital hospital, String patientName, String patientNo, String genderCode, String birthDate, String phoneNo) {
+    public Patient(Hospital hospital, String patientName, String patientNo, String genderCode, String birthDate, String phoneNumber) {
         this.hospital = hospital;
         this.patientName = patientName;
         this.patientNo = patientNo;
         this.genderCode = genderCode;
         this.birthDate = birthDate;
-        this.PhoneNo = phoneNo;
+        this.PhoneNumber = phoneNumber;
     }
 }
