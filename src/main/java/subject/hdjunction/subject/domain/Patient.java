@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import subject.hdjunction.subject.dto.PatientDto;
 
 import javax.persistence.*;
 
@@ -39,6 +40,13 @@ public class Patient {
     // 핸드폰 번호
     @Column(name = "phn_no")
     private String PhoneNumber;
+
+    public Patient updatePatient(PatientDto patientDto) {
+        this.patientName = patientDto.getPatientName();
+        this.PhoneNumber = patientDto.getPhoneNumber();
+        this.birthDate = patientDto.getBirthDate();
+        return this;
+    }
 
     @Builder
     public Patient(Hospital hospital, String patientName, String patientNo, String genderCode, String birthDate, String phoneNumber) {
