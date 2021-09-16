@@ -27,7 +27,7 @@ public class VisitController {
     }
 
     @PutMapping("/api/v1/visit/{id}")
-    public ResponseEntity<Response<VisitDto>> updateInfo(@PathVariable(name = "id") Long visitId, VisitDto visitDto) {
+    public ResponseEntity<Response<VisitDto>> updateInfo(@PathVariable(name = "id") Long visitId, @RequestBody VisitDto visitDto) {
         return ResponseEntity.ok().body(Response.success(visitService.updateVisit(visitId, visitDto)));
     }
 
