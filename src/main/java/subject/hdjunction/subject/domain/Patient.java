@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import subject.hdjunction.subject.dto.PatientDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,22 +41,27 @@ public class Patient {
 
     // 핸드폰 번호
     @Column(name = "phn_no")
-    private String PhoneNumber;
+    private String phoneNumber;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private List<Visit> visits = new ArrayList<>();
 
     public Patient updatePatient(PatientDto patientDto) {
         this.patientName = patientDto.getPatientName();
-        this.PhoneNumber = patientDto.getPhoneNumber();
+        this.phoneNumber = patientDto.getPhoneNumber();
         this.birthDate = patientDto.getBirthDate();
         return this;
     }
 
     @Builder
-    public Patient(Hospital hospital, String patientName, String patientNo, String genderCode, String birthDate, String phoneNumber) {
+    public Patient(Hospital hospital, String patientName, String patientNo, String genderCode, String birthDate
+            , String phoneNumber, List<Visit> visits) {
         this.hospital = hospital;
         this.patientName = patientName;
         this.patientNo = patientNo;
         this.genderCode = genderCode;
         this.birthDate = birthDate;
-        this.PhoneNumber = phoneNumber;
+        this.phoneNumber = phoneNumber;
+        this.visits = visits;
     }
 }
