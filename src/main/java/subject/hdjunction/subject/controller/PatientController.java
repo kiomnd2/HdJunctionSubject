@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import subject.hdjunction.subject.codes.Codes;
 import subject.hdjunction.subject.controller.response.Response;
 import subject.hdjunction.subject.dto.PatientDto;
+import subject.hdjunction.subject.repository.SearchCondition;
 import subject.hdjunction.subject.service.PatientService;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class PatientController {
     }
 
     @GetMapping("/api/vi/patients")
-    public ResponseEntity<Response<List<PatientDto>>> searchInfos() {
-        List<PatientDto> patients = patientService.getPatients();
+    public ResponseEntity<Response<List<PatientDto>>> searchInfos(SearchCondition searchCondition) {
+        List<PatientDto> patients = patientService.getPatients(searchCondition);
         return ResponseEntity.ok().body(Response.success(patients));
     }
 
@@ -43,7 +44,4 @@ public class PatientController {
         patientService.removePatient(patientId);
         return ResponseEntity.ok().body(Response.success(Codes.D2000.desc));
     }
-
-
-
 }

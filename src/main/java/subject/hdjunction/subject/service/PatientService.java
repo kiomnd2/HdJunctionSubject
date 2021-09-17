@@ -13,6 +13,7 @@ import subject.hdjunction.subject.exception.NotFoundHospitalException;
 import subject.hdjunction.subject.exception.NotFoundPatientException;
 import subject.hdjunction.subject.repository.HospitalRepository;
 import subject.hdjunction.subject.repository.PatientRepository;
+import subject.hdjunction.subject.repository.SearchCondition;
 import subject.hdjunction.subject.repository.VisitRepository;
 import subject.hdjunction.subject.util.PatientNoGenerator;
 
@@ -74,6 +75,8 @@ public class PatientService {
         List<VisitDto> visitInfos = patientVisits.stream()
                 .map(visit -> VisitDto.builder()
                         .id(visit.getId())
+                        .hospitalId(patient.getHospital().getId())
+                        .patientId(patient.getId())
                         .receptionDateTime(visit.getReceptionDateTime())
                         .visitStateCode(visit.getVisitStateCode())
                         .build()).collect(Collectors.toList());
@@ -92,23 +95,13 @@ public class PatientService {
         return patientDto;
     }
 
+
     public List<PatientDto> getPatients() {
-        List<Patient> patients = patientRepository.findAll();
-        return patients.stream()
-                .map(patient -> {
-                    PatientDto patientDto = PatientDto.builder()
-                            .id(patient.getId())
-                            .hospitalId(patient.getHospital().getId())
-                            .birthDate(patient.getBirthDate())
-                            .genderCode(patient.getGenderCode())
-                            .patientNo(patient.getPatientNo())
-                            .phoneNumber(patient.getPhoneNumber())
-                            .patientName(patient.getPatientName())
-                            .build();
-                    visitRepository.findTopByPatientOrderByReceptionDateTimeDesc(patient)
-                            .ifPresent(visit -> patientDto.setListReceptionDateTime(visit.getReceptionDateTime()));
-                    return patientDto;
-                }).collect(Collectors.toList());
+        return getPatients(new SearchCondition());
+    }
+
+    public List<PatientDto> getPatients(SearchCondition searchCondition) {
+        return patientRepository.findBySearchCondition(searchCondition);
     }
 
     public PatientDto updatePatient(Long id, PatientDto patientDto) {

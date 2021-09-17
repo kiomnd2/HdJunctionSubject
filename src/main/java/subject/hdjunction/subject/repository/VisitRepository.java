@@ -1,7 +1,6 @@
 package subject.hdjunction.subject.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import subject.hdjunction.subject.domain.Patient;
 import subject.hdjunction.subject.domain.Visit;
 
