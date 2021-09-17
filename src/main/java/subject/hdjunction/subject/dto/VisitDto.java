@@ -2,9 +2,13 @@ package subject.hdjunction.subject.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor(force = true)
+@ToString
 @Getter
 public class VisitDto {
 

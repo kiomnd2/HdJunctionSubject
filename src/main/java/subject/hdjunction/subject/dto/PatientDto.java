@@ -2,11 +2,15 @@ package subject.hdjunction.subject.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor(force = true)
+@ToString
 @Getter
 public class PatientDto {
 
