@@ -8,10 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import subject.hdjunction.subject.domain.Hospital;
 import subject.hdjunction.subject.domain.Patient;
+import subject.hdjunction.subject.domain.Visit;
 import subject.hdjunction.subject.dto.PatientDto;
 import subject.hdjunction.subject.repository.HospitalRepository;
 import subject.hdjunction.subject.repository.PatientRepository;
+import subject.hdjunction.subject.repository.SearchCondition;
+import subject.hdjunction.subject.repository.VisitRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -27,6 +31,9 @@ class PatientServiceTest {
 
     @Autowired
     HospitalRepository hospitalRepository;
+
+    @Autowired
+    VisitRepository visitRepository;
 
     Hospital hospital;
 
@@ -143,6 +150,8 @@ class PatientServiceTest {
 
         patientService.register(patientDto2);
 
+
+
         List<PatientDto> patients = patientService.getPatients();
 
         Assertions.assertThat(patients.size()).isEqualTo(2);
@@ -183,6 +192,90 @@ class PatientServiceTest {
         Assertions.assertThat(patient.getBirthDate()).isEqualTo(toBirthDate);
         Assertions.assertThat(patient.getPhoneNumber()).isEqualTo(toPhoneNo);
 
+    }
+
+
+    @Test
+    void findPatientAndVisitsTest() throws Throwable {
+        final String patientName = "김개똥122";
+        final String patientNo = "123123";
+        final String birthDate = "19910222";
+        final String genderCode = "M";
+        final String phoneNo = "01111123123";
+
+
+        Patient patient = Patient.builder()
+                .patientName(patientName)
+                .patientNo(patientNo)
+                .birthDate(birthDate)
+                .genderCode(genderCode)
+                .phoneNumber(phoneNo)
+                .hospital(this.hospital)
+                .build();
+
+        patientRepository.save(patient);
+
+
+        for (int i=0 ; i< 10 ; i++) {
+            LocalDateTime receptionDateTime = LocalDateTime.of(2021, 9,10+i, 12, 59,59);
+            final String visitStateCode = Integer.toString(i);
+            Visit visit = Visit.builder()
+                    .receptionDateTime(receptionDateTime)
+                    .visitStateCode(visitStateCode)
+                    .hospital(this.hospital)
+                    .patient(patient)
+                    .build();
+
+            visitRepository.save(visit);
+        }
+
+        PatientDto patient1 = patientService.getPatient(patient.getId());
+        System.out.println("patient1 = " + patient1);
+    }
+
+
+    @Test
+    void findPatientsAndLastVisitsDateTest() throws Throwable {
+        final String patientName = "김개똥122";
+        final String patientNo = "123123";
+        final String birthDate = "19910222";
+        final String genderCode = "M";
+        final String phoneNo = "01111123123";
+
+
+        Patient patient = Patient.builder()
+                .patientName(patientName)
+                .patientNo(patientNo)
+                .birthDate(birthDate)
+                .genderCode(genderCode)
+                .phoneNumber(phoneNo)
+                .hospital(this.hospital)
+                .build();
+
+        patientRepository.save(patient);
+
+        LocalDateTime receptionDateTime = LocalDateTime.of(2021, 9,1, 12, 59,59);
+        for (int i=0 ; i< 10 ; i++) {
+            LocalDateTime changedDateTime = receptionDateTime.plusDays(i);
+            final String visitStateCode = Integer.toString(i);
+            Visit visit = Visit.builder()
+                    .receptionDateTime(changedDateTime)
+                    .visitStateCode(visitStateCode)
+                    .hospital(this.hospital)
+                    .patient(patient)
+                    .build();
+
+            visitRepository.save(visit);
+        }
+
+
+        List<PatientDto> patients = patientService.getPatients();
+
+        Assertions.assertThat(patients.size()).isEqualTo(1);
+        Assertions.assertThat(patients.get(0).getPatientName()).isEqualTo(patientName);
+        Assertions.assertThat(patients.get(0).getPatientNo()).isEqualTo(patientNo);
+        Assertions.assertThat(patients.get(0).getGenderCode()).isEqualTo(genderCode);
+        Assertions.assertThat(patients.get(0).getLastReceptionDateTime()).isEqualTo(receptionDateTime.plusDays(9).toString());
     }
 
 }
