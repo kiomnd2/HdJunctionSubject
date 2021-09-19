@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import subject.hdjunction.subject.domain.Patient;
+import subject.hdjunction.subject.domain.QCode;
 import subject.hdjunction.subject.dto.PatientDto;
 import subject.hdjunction.subject.repository.PatientRepositoryCus;
 import subject.hdjunction.subject.repository.SearchCondition;
@@ -17,6 +18,7 @@ import subject.hdjunction.subject.repository.SearchCondition;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.hasText;
+import static subject.hdjunction.subject.domain.QCode.*;
 import static subject.hdjunction.subject.domain.QPatient.patient;
 import static subject.hdjunction.subject.domain.QVisit.visit;
 
@@ -58,12 +60,15 @@ public class PatientRepositoryCusImpl implements PatientRepositoryCus {
                         patient.patientName,
                         patient.patientNo,
                         patient.genderCode,
+                        code1.codeName,
                         patient.birthDate,
                         patient.phoneNumber,
                         visit.receptionDateTime.max().as("lastReceptionDateTime")
                 ))
                 .from(patient)
                 .leftJoin(patient.visits, visit)
+                .leftJoin(code1)
+                .on(code1.code.eq(patient.genderCode))
                 .where(
                         patientNameEq(searchCondition.getPatientName()),
                         patientNoEq(searchCondition.getPatientNo()),

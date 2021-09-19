@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import subject.hdjunction.subject.consts.CodeGroupConstant;
 import subject.hdjunction.subject.domain.Hospital;
 import subject.hdjunction.subject.domain.Patient;
 import subject.hdjunction.subject.domain.Visit;
@@ -33,6 +34,8 @@ public class PatientService {
 
     final private VisitRepository visitRepository;
 
+    final private CodeManager codeManager;
+
 
     @Transactional(readOnly = false)
     public PatientDto register(PatientDto patientDto) {
@@ -58,6 +61,8 @@ public class PatientService {
                 .patientName(savedPatient.getPatientName())
                 .birthDate(savedPatient.getBirthDate())
                 .genderCode(savedPatient.getGenderCode())
+                .genderName(codeManager.getCodeName(CodeGroupConstant.GENDER
+                        , savedPatient.getGenderCode()))
                 .hospitalId(savedPatient.getHospital().getId())
                 .patientNo(savedPatient.getPatientNo())
                 .phoneNumber(savedPatient.getPhoneNumber())
@@ -90,6 +95,8 @@ public class PatientService {
                 .patientNo(patient.getPatientNo())
                 .hospitalId(patient.getHospital().getId())
                 .genderCode(patient.getGenderCode())
+                .genderName(codeManager.getCodeName(CodeGroupConstant.GENDER
+                        , patient.getGenderCode()))
                 .birthDate(patient.getBirthDate())
                 .build();
         patientDto.addVisitDtos(visitInfos);
@@ -119,6 +126,8 @@ public class PatientService {
                 .hospitalId(updatedPatient.getHospital().getId())
                 .birthDate(updatedPatient.getBirthDate())
                 .genderCode(updatedPatient.getGenderCode())
+                .genderName(codeManager.getCodeName(CodeGroupConstant.GENDER
+                        , updatedPatient.getGenderCode()))
                 .patientNo(updatedPatient.getPatientNo())
                 .phoneNumber(updatedPatient.getPhoneNumber())
                 .build();

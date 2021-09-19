@@ -26,6 +26,8 @@ public class PatientDto {
 
     final private String genderCode;
 
+    final private String genderName;
+
     final private String birthDate;
 
     final private String phoneNumber;
@@ -45,12 +47,13 @@ public class PatientDto {
 
     @Builder
     public PatientDto(Long id, Long hospitalId, String patientName, String patientNo, String genderCode,
-                      String birthDate, String phoneNumber) {
+                      String genderName, String birthDate, String phoneNumber) {
         this.id = id;
         this.hospitalId = hospitalId;
         this.patientName = patientName;
         this.patientNo = patientNo;
         this.genderCode = genderCode;
+        this.genderName = genderName;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
     }

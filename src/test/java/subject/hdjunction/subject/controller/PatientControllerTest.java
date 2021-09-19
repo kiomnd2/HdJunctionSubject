@@ -29,8 +29,7 @@ import subject.hdjunction.subject.service.PatientService;
 
 import java.time.LocalDateTime;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -158,7 +157,7 @@ class PatientControllerTest {
         final String patientName2 = "김개똥2";
         final String patientNo2 = "123";
         final String birthDate2 = "19910";
-        final String genderCode2 = "W";
+        final String genderCode2 = "M";
         final String phoneNo2 = "0111111233";
 
         Patient patient2 = Patient.builder()
