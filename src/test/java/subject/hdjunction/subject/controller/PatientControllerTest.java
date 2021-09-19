@@ -1,12 +1,15 @@
 package subject.hdjunction.subject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -20,7 +23,9 @@ import subject.hdjunction.subject.repository.HospitalRepository;
 import subject.hdjunction.subject.repository.PatientRepository;
 
 import java.util.List;
+import java.util.function.Function;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -129,7 +134,7 @@ class PatientControllerTest {
         Patient patientEntity2 = patientRepository.save(patient2);
 
 
-        mockMvc.perform(get("/api/vi/patients")
+        mockMvc.perform(get("/api/v1/patients")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -206,62 +211,43 @@ class PatientControllerTest {
 
     @Test
     void requestSearchPatientsByConditions() throws Exception {
+        String patientName = "김개똥";
+        String patientNo = "12312";
+        String birthDate = "1991022";
+        String phoneNo = "0111112312";
+        String genderCode = "M";
+        for(int i=0 ; i< 10 ; i++ ){
+            patientName = "김개똥"+i;
+            patientNo = "12312"+i;
+            birthDate = "1991022"+i;
+            genderCode = "M";
+            phoneNo = "0111112312"+i;
 
-        final String patientName = "김개똥";
-        final String patientNo = "123123";
-        final String birthDate = "19910221";
-        final String genderCode = "M";
-        final String phoneNo = "01111123123";
-
-        Patient patient = Patient.builder()
-                .patientName(patientName)
-                .patientNo(patientNo)
-                .birthDate(birthDate)
-                .genderCode(genderCode)
-                .phoneNumber(phoneNo)
-                .hospital(this.hospital)
-                .build();
-
-        Patient patientEntity = patientRepository.save(patient);
-
-
-        final String patientName2 = "김개똥2";
-        final String patientNo2 = "123";
-        final String birthDate2 = "19910";
-        final String genderCode2 = "W";
-        final String phoneNo2 = "0111111233";
-
-        Patient patient2 = Patient.builder()
-                .patientName(patientName2)
-                .patientNo(patientNo2)
-                .birthDate(birthDate2)
-                .genderCode(genderCode2)
-                .phoneNumber(phoneNo2)
-                .hospital(this.hospital)
-                .build();
-
-        patientRepository.save(patient2);
+            Patient patient = Patient.builder()
+                    .patientName(patientName)
+                    .patientNo(patientNo)
+                    .birthDate(birthDate)
+                    .genderCode(genderCode)
+                    .phoneNumber(phoneNo)
+                    .hospital(this.hospital)
+                    .build();
+            patientRepository.save(patient);
+        }
 
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/vi/patients")
+        MvcResult mvcResult = mockMvc.perform(get("/api/v2/patients")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .param("birthDate", birthDate2)
-                .param("patientName", patientName2)
-                .param("patientNo", patientNo2))
+                .param("pageNo", "2")
+                .param("pageSize", "5"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("body[0].id").value(patient2.getId()))
-                .andExpect(jsonPath("body[0].hospitalId").value(patient2.getHospital().getId()))
-                .andExpect(jsonPath("body[0].patientNo").value(patient2.getPatientNo()))
-                .andExpect(jsonPath("body[0].genderCode").value(patient2.getGenderCode()))
-                .andExpect(jsonPath("body[0].birthDate").value(patient2.getBirthDate()))
+                .andExpect(jsonPath("body.content").value(hasSize(5)))
+                .andExpect(jsonPath("body.content[*].patientName")
+                        .value(Matchers.contains("김개똥5","김개똥6","김개똥7","김개똥8","김개똥9")))
+                .andExpect(jsonPath("body.pageable.offset").value(5))
+                .andExpect(jsonPath("body.last").value(true))
                 .andReturn();
 
-        Response<List<PatientDto>> result = mapper.readValue(mvcResult.getResponse().getContentAsString(), Response.class);
-
-        List<PatientDto> list = result.getBody();
-
-        Assertions.assertThat(list.size()).isEqualTo(1);
     }
 
 

@@ -1,10 +1,15 @@
 package subject.hdjunction.subject.service;
 
 import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import subject.hdjunction.subject.domain.Hospital;
 import subject.hdjunction.subject.domain.Patient;
@@ -276,6 +281,44 @@ class PatientServiceTest {
         Assertions.assertThat(patients.get(0).getPatientNo()).isEqualTo(patientNo);
         Assertions.assertThat(patients.get(0).getGenderCode()).isEqualTo(genderCode);
         Assertions.assertThat(patients.get(0).getLastReceptionDateTime()).isEqualTo(receptionDateTime.plusDays(9).toString());
+    }
+
+    @Test
+    void findPatientsAndPagingTest() throws Throwable {
+        String patientName = "김개똥";
+        String patientNo = "12312";
+        String birthDate = "1991022";
+        String phoneNo = "0111112312";
+        String genderCode = "M";
+        for(int i=0 ; i< 10 ; i++ ){
+            patientName = "김개똥"+i;
+            patientNo = "12312"+i;
+            birthDate = "1991022"+i;
+            genderCode = "M";
+            phoneNo = "0111112312"+i;
+
+            Patient patient = Patient.builder()
+                    .patientName(patientName)
+                    .patientNo(patientNo)
+                    .birthDate(birthDate)
+                    .genderCode(genderCode)
+                    .phoneNumber(phoneNo)
+                    .hospital(this.hospital)
+                    .build();
+            patientRepository.save(patient);
+        }
+
+        SearchCondition condition = new SearchCondition();
+
+        PageRequest request = PageRequest.of(1, 5);
+        Pageable pageable = request.toOptional().get();
+
+        Page<PatientDto> page = patientService.getPatients(condition, pageable);
+        List<PatientDto> patients = page.getContent();
+
+        Assertions.assertThat(patients.size()).isEqualTo(5);
+        Assertions.assertThat(patients.get(0).getPatientName()).isEqualTo("김개똥5");
+        Assertions.assertThat(patients.get(0).getPatientNo()).isEqualTo("123125");
     }
 
 }
