@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import subject.hdjunction.subject.codes.Codes;
 import subject.hdjunction.subject.domain.Hospital;
 import subject.hdjunction.subject.domain.Patient;
 import subject.hdjunction.subject.domain.Visit;
@@ -17,18 +19,22 @@ import subject.hdjunction.subject.repository.HospitalRepository;
 import subject.hdjunction.subject.repository.PatientRepository;
 import subject.hdjunction.subject.repository.VisitRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+
 @Transactional
-@AutoConfigureMockMvc
+@AutoConfigureRestDocs
 @SpringBootTest
+@AutoConfigureMockMvc
 class VisitControllerTest {
 
     @Autowired
@@ -106,9 +112,12 @@ class VisitControllerTest {
                 .receptionDateTime(receptionDateTime).build();
         visitRepository.save(visit);
 
-        mockMvc.perform(get("/api/v1/visit/" + visit.getId())
+        mockMvc.perform(get("/api/v1/visit/{id}", visit.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
+                .andDo(document("visit",
+                        pathParameters(
+                                parameterWithName("id").description("방문아이디"))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("body.id").value(visit.getId()))
                 .andExpect(jsonPath("body.visitStateCode").value(visitStateCode))
@@ -117,7 +126,6 @@ class VisitControllerTest {
 
     @Test
     void requestRegisterVisit() throws Exception {
-
         LocalDateTime receptionDateTime = LocalDateTime.of(2021, 9,16, 12, 59,59);
         String visitStateCode = "1";
         VisitDto visit = VisitDto.builder()
@@ -130,6 +138,13 @@ class VisitControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsBytes(visit)))
                 .andDo(print())
+                .andDo(document("register-visit",
+                        requestFields(
+                                fieldWithPath("patientId").description("환자아이디"),
+                                fieldWithPath("hospitalId").description("병원아이디"),
+                                fieldWithPath("visitStateCode").description("방문코드"),
+                                fieldWithPath("receptionDateTime").description("접수일자"))
+                        ))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("body.visitStateCode").value(visitStateCode))
                 .andExpect(jsonPath("body.receptionDateTime").value(receptionDateTime.toString()));
@@ -155,12 +170,44 @@ class VisitControllerTest {
                 .visitStateCode(visitStateCode2)
                 .receptionDateTime(receptionDateTime2).build();
 
-        mockMvc.perform(put("/api/v1/visit/" + savedVisit.getId())
+        mockMvc.perform(put("/api/v1/visit/{id}", savedVisit.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsBytes(visit2)))
                 .andDo(print())
+                .andDo(document("update-visit",
+                        pathParameters(
+                                parameterWithName("id").description("방문아이디")),
+                        requestFields(
+                                fieldWithPath("patientId").description("환자아이디"),
+                                fieldWithPath("hospitalId").description("병원아이디"),
+                                fieldWithPath("visitStateCode").description("방문코드"),
+                                fieldWithPath("receptionDateTime").description("접수일자"))))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("code").value(Codes.S0000.code))
                 .andExpect(jsonPath("body.visitStateCode").value(visitStateCode2))
                 .andExpect(jsonPath("body.receptionDateTime").value(receptionDateTime2.toString()));
+    }
+
+    @Test
+    void requestDeleteVisit() throws Exception {
+        LocalDateTime receptionDateTime = LocalDateTime.of(2021, 9,16, 12, 59,59);
+        String visitStateCode = "1";
+        Visit visit = Visit.builder()
+                .patient(this.patient)
+                .hospital(this.hospital)
+                .visitStateCode(visitStateCode)
+                .receptionDateTime(receptionDateTime).build();
+        Visit savedVisit = visitRepository.save(visit);
+
+
+        mockMvc.perform(delete("/api/v1/visit/{id}", savedVisit.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andDo(document("delete-visit",pathParameters(
+                        parameterWithName("id").description("방문아이디"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("body").value("삭제"))
+                .andExpect(jsonPath("code").value(Codes.S0000.code));
+
     }
 }
