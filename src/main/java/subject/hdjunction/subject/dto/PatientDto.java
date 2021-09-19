@@ -1,5 +1,6 @@
 package subject.hdjunction.subject.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor(force = true)
 @ToString
 @Getter
@@ -28,15 +30,16 @@ public class PatientDto {
 
     final private String phoneNumber;
 
-    final private List<VisitDto> visitDtos = new ArrayList<>();
+    private List<VisitDto> visitDtos;
 
     private LocalDateTime lastReceptionDateTime;
 
     public void addVisitDtos(List<VisitDto> visitDtos) {
+        this.visitDtos = new ArrayList<>();
         this.visitDtos.addAll(visitDtos);
     }
 
-    public void setListReceptionDateTime(LocalDateTime lastReceptionDateTime) {
+    public void setLastReceptionDateTime(LocalDateTime lastReceptionDateTime) {
         this.lastReceptionDateTime = lastReceptionDateTime;
     }
 
