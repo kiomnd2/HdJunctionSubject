@@ -201,45 +201,6 @@ class PatientServiceTest {
 
 
     @Test
-    void findPatientAndVisitsTest() throws Throwable {
-        final String patientName = "김개똥122";
-        final String patientNo = "123123";
-        final String birthDate = "19910222";
-        final String genderCode = "M";
-        final String phoneNo = "01111123123";
-
-
-        Patient patient = Patient.builder()
-                .patientName(patientName)
-                .patientNo(patientNo)
-                .birthDate(birthDate)
-                .genderCode(genderCode)
-                .phoneNumber(phoneNo)
-                .hospital(this.hospital)
-                .build();
-
-        patientRepository.save(patient);
-
-
-        for (int i=0 ; i< 10 ; i++) {
-            LocalDateTime receptionDateTime = LocalDateTime.of(2021, 9,10+i, 12, 59,59);
-            final String visitStateCode = Integer.toString(i);
-            Visit visit = Visit.builder()
-                    .receptionDateTime(receptionDateTime)
-                    .visitStateCode(visitStateCode)
-                    .hospital(this.hospital)
-                    .patient(patient)
-                    .build();
-
-            visitRepository.save(visit);
-        }
-
-        PatientDto patient1 = patientService.getPatient(patient.getId());
-        System.out.println("patient1 = " + patient1);
-    }
-
-
-    @Test
     void findPatientsAndLastVisitsDateTest() throws Throwable {
         final String patientName = "김개똥122";
         final String patientNo = "123123";
