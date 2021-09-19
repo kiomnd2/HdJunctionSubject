@@ -2,6 +2,8 @@ package subject.hdjunction.subject.service;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import subject.hdjunction.subject.domain.Hospital;
@@ -102,6 +104,11 @@ public class PatientService {
 
     public List<PatientDto> getPatients(SearchCondition searchCondition) {
         return patientRepository.findBySearchCondition(searchCondition);
+    }
+
+
+    public Page<PatientDto> getPatients(SearchCondition searchCondition, Pageable pageable) {
+        return patientRepository.findBySearchConditionAndPageable(searchCondition, pageable);
     }
 
     public PatientDto updatePatient(Long id, PatientDto patientDto) {

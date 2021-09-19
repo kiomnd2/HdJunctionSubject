@@ -1,6 +1,8 @@
 package subject.hdjunction.subject.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import subject.hdjunction.subject.codes.Codes;
@@ -23,9 +25,15 @@ public class PatientController {
         return ResponseEntity.ok().body(Response.success(patient));
     }
 
-    @GetMapping("/api/vi/patients")
+    @GetMapping("/api/v1/patients")
     public ResponseEntity<Response<List<PatientDto>>> searchInfos(SearchCondition searchCondition) {
         List<PatientDto> patients = patientService.getPatients(searchCondition);
+        return ResponseEntity.ok().body(Response.success(patients));
+    }
+
+    @GetMapping("/api/v2/patients")
+    public ResponseEntity<Response<Page<PatientDto>>> searchInfos(SearchCondition searchCondition, Pageable pageable) {
+        Page<PatientDto> patients = patientService.getPatients(searchCondition, pageable);
         return ResponseEntity.ok().body(Response.success(patients));
     }
 

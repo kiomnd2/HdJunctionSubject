@@ -2,9 +2,14 @@ package subject.hdjunction.subject.repository.impl;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
+import subject.hdjunction.subject.domain.Patient;
 import subject.hdjunction.subject.dto.PatientDto;
 import subject.hdjunction.subject.repository.PatientRepositoryCus;
 import subject.hdjunction.subject.repository.SearchCondition;
@@ -22,7 +27,30 @@ public class PatientRepositoryCusImpl implements PatientRepositoryCus {
 
     @Override
     public List<PatientDto> findBySearchCondition(SearchCondition searchCondition) {
-        List<PatientDto> fetch = queryFactory
+        return getPatientDtoJPAQuery(searchCondition).fetch();
+    }
+
+    @Override
+    public Page<PatientDto> findBySearchConditionAndPageable(SearchCondition searchCondition, Pageable pageable) {
+        List<PatientDto> contents = getPatientDtoJPAQuery(searchCondition)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+        JPAQuery<Patient> count = queryFactory
+                .select(patient)
+                .from(patient)
+                .where(
+                        patientNameEq(searchCondition.getPatientName()),
+                        patientNoEq(searchCondition.getPatientNo()),
+                        birthDateEq(searchCondition.getBirthDate()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        return PageableExecutionUtils.getPage(contents, pageable, count::fetchCount);
+    }
+
+    private JPAQuery<PatientDto> getPatientDtoJPAQuery(SearchCondition searchCondition) {
+        return queryFactory
                 .select(Projections.fields(
                         PatientDto.class,
                         patient.id,
@@ -40,10 +68,7 @@ public class PatientRepositoryCusImpl implements PatientRepositoryCus {
                         patientNameEq(searchCondition.getPatientName()),
                         patientNoEq(searchCondition.getPatientNo()),
                         birthDateEq(searchCondition.getBirthDate()))
-                .groupBy(patient)
-                .fetch();
-
-        return fetch;
+                .groupBy(patient);
     }
 
     private BooleanExpression patientNameEq(String patientName) {
