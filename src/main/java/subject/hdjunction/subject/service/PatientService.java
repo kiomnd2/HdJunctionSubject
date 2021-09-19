@@ -73,7 +73,7 @@ public class PatientService {
     public PatientDto getPatient(Long patientId) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(NotFoundPatientException::new);
 
-        List<Visit> patientVisits = visitRepository.findAllByPatient(patient);
+        List<Visit> patientVisits = visitRepository.findAllByPatientOrderByReceptionDateTimeDesc(patient);
         List<VisitDto> visitInfos = patientVisits.stream()
                 .map(visit -> VisitDto.builder()
                         .id(visit.getId())
@@ -93,7 +93,7 @@ public class PatientService {
                 .birthDate(patient.getBirthDate())
                 .build();
         patientDto.addVisitDtos(visitInfos);
-
+        if (visitInfos.size() > 0) patientDto.setLastReceptionDateTime(visitInfos.get(0).getReceptionDateTime());
         return patientDto;
     }
 
@@ -105,7 +105,6 @@ public class PatientService {
     public List<PatientDto> getPatients(SearchCondition searchCondition) {
         return patientRepository.findBySearchCondition(searchCondition);
     }
-
 
     public Page<PatientDto> getPatients(SearchCondition searchCondition, Pageable pageable) {
         return patientRepository.findBySearchConditionAndPageable(searchCondition, pageable);
