@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+import subject.hdjunction.subject.consts.CodeGroupConstant;
 import subject.hdjunction.subject.domain.Patient;
 import subject.hdjunction.subject.dto.PatientDto;
 import subject.hdjunction.subject.repository.PatientRepositoryCus;
@@ -67,7 +68,7 @@ public class PatientRepositoryCusImpl implements PatientRepositoryCus {
                 .from(patient)
                 .leftJoin(patient.visits, visit)
                 .leftJoin(code1)
-                .on(code1.code.eq(patient.genderCode))
+                .on(code1.code.eq(patient.genderCode).and(code1.group().codeGroup.eq(CodeGroupConstant.GENDER)))
                 .where(
                         patientNameEq(searchCondition.getPatientName()),
                         patientNoEq(searchCondition.getPatientNo()),
