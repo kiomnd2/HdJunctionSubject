@@ -14,14 +14,19 @@ import java.time.LocalDateTime;
 @Getter
 public class VisitDto {
 
+    // 방문 아이디
     final private Long id;
 
+    // 병원 아이디
     final private Long hospitalId;
 
+    // 환자 아아디
     final private Long patientId;
 
+    // 접수일자
     final private LocalDateTime receptionDateTime;
 
+    // 방문상태코드
     final private String visitStateCode;
 
     @Builder

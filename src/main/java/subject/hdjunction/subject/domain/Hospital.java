@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,15 +16,15 @@ public class Hospital {
     private Long id;
 
     // 병원명
-    @Column(name = "hsptl_nm")
+    @Column(name = "hsptl_nm", length = 45)
     private String hospitalName;
 
     // 요양기관번호
-    @Column(name = "nrs_hm_no")
+    @Column(name = "nrs_hm_no", length = 20)
     private String nursingHomeNo;
 
     // 병원장명
-    @Column(name = "chf_nm")
+    @Column(name = "chf_nm", length = 10)
     private String ChiefName;
 
     @Builder

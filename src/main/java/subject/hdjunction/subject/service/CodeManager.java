@@ -19,6 +19,7 @@ import subject.hdjunction.subject.repository.CodeRepository;
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -33,18 +34,24 @@ public class CodeManager {
 
     final private CodeGroupRepository codeGroupRepository;
 
+    /**
+     * 코드 데이터를 가져와 데이터베이스에 입력합니다
+     */
     @PostConstruct
     public void initTransferData() {
         saveCodeGroup();
         saveCode();
     }
 
+    /**
+     * 코드 그룹 데이터를 입력합니다
+     */
     @Transactional(readOnly = false)
     public void saveCodeGroup() {
         Resource codeGroupResource = new ClassPathResource("code_group.csv");
 
         try(BufferedReader br = new BufferedReader(
-                Files.newBufferedReader(Paths.get(codeGroupResource.getURI())))) {
+                Files.newBufferedReader(Paths.get(codeGroupResource.getURI()), StandardCharsets.UTF_8))) {
             final CSVReader reader = new CSVReaderBuilder(br).withSkipLines(1).build();
             String[] data;
             while((data = reader.readNext()) != null) {
@@ -59,11 +66,14 @@ public class CodeManager {
         }
     }
 
+    /**
+     * 코드 데이터를 입력 받습니다
+     */
     private void saveCode() {
         Resource codeGroupResource = new ClassPathResource("code.csv");
 
         try(BufferedReader br = new BufferedReader(
-                Files.newBufferedReader(Paths.get(codeGroupResource.getURI())))) {
+                Files.newBufferedReader(Paths.get(codeGroupResource.getURI()), StandardCharsets.UTF_8))) {
             final CSVReader reader = new CSVReaderBuilder(br).withSkipLines(1).build();
             String[] data;
             while((data = reader.readNext()) != null) {
@@ -79,6 +89,12 @@ public class CodeManager {
         }
     }
 
+    /**
+     * 코드를 코드명으로 변환하여 출력합니다
+     * @param group 코드그룹
+     * @param code 코드키값
+     * @return 코드명
+     */
     public String getCodeName(String group, String code) {
         Code code1 = codeRepository.findById(group, code).orElseThrow(NotFoundCodeException::new);
         return code1.getCodeName();

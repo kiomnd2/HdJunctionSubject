@@ -11,6 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CodeId implements Serializable {
+    // 코드 키값
     private String group;
     private String code;
 }

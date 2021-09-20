@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import subject.hdjunction.subject.domain.Hospital;
 import subject.hdjunction.subject.domain.Patient;
 import subject.hdjunction.subject.domain.Visit;
-import subject.hdjunction.subject.dto.PatientDto;
 import subject.hdjunction.subject.dto.VisitDto;
 import subject.hdjunction.subject.exception.NotFoundHospitalException;
 import subject.hdjunction.subject.exception.NotFoundPatientException;
@@ -15,10 +14,6 @@ import subject.hdjunction.subject.exception.NotFoundVisitException;
 import subject.hdjunction.subject.repository.HospitalRepository;
 import subject.hdjunction.subject.repository.PatientRepository;
 import subject.hdjunction.subject.repository.VisitRepository;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,6 +26,11 @@ public class VisitService {
 
     final private HospitalRepository hospitalRepository;
 
+    /**
+     * 방문 접수 정보를 등록합니다
+     * @param visitDto 방문정보DTO
+     * @return 방문정보
+     */
     public VisitDto registerVisit(VisitDto visitDto) {
 
         Patient patient = patientRepository.findById(visitDto.getPatientId())
@@ -55,6 +55,11 @@ public class VisitService {
                 .build();
     }
 
+    /**
+     * 방문 접수 정보를 가져옵니다.
+     * @param visitId 방문 아이디
+     * @return 방문 접수 정보
+     */
     public VisitDto getVisit(Long visitId) {
         Visit visit = visitRepository.findById(visitId)
                 .orElseThrow(NotFoundVisitException::new);
@@ -67,6 +72,12 @@ public class VisitService {
                 .build();
     }
 
+    /**
+     * 방문 접수 정보를 수정합니다.
+     * @param visitId 방문 아이디
+     * @param visitDto 수정할 정보
+     * @return 방문 접수 정보
+     */
     public VisitDto updateVisit(Long visitId, VisitDto visitDto) {
         Visit visit = visitRepository.findById(visitId)
                 .orElseThrow(NotFoundVisitException::new);
@@ -82,6 +93,10 @@ public class VisitService {
                 .build();
     }
 
+    /**
+     * 방문 접소 정보를 제거합니다.
+     * @param visitId 방문 아이디
+     */
     public void removeVisit(Long visitId) {
         visitRepository.deleteById(visitId);
     }

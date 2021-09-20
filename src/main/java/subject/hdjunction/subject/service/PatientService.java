@@ -37,6 +37,11 @@ public class PatientService {
     final private CodeManager codeManager;
 
 
+    /**
+     * 환자정보를 등록합니다
+     * @param patientDto 환자정보
+     * @return 환자정보DTO
+     */
     @Transactional(readOnly = false)
     public PatientDto register(PatientDto patientDto) {
 
@@ -69,12 +74,21 @@ public class PatientService {
                 .build();
     }
 
+    /**
+     * 환자정보를 제거합니다
+     * @param id 환자아이디
+     */
     @Transactional(readOnly = false)
     public void removePatient(Long id) {
         patientRepository.deleteById(id);
     }
 
 
+    /**
+     * 환자정보를 가져옵니다
+     * @param patientId 환자 아이디
+     * @return 환자정보DTO
+     */
     public PatientDto getPatient(Long patientId) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(NotFoundPatientException::new);
 
@@ -105,18 +119,39 @@ public class PatientService {
     }
 
 
+    /**
+     * 환자 정보 리스트를 가져옵니다.
+     * @return
+     */
     public List<PatientDto> getPatients() {
         return getPatients(new SearchCondition());
     }
 
+    /**
+     * 환자정보리스트를 조건에 따라 출력합니다
+     * @param searchCondition 조회조건
+     * @return 환자정보리스트
+     */
     public List<PatientDto> getPatients(SearchCondition searchCondition) {
         return patientRepository.findBySearchCondition(searchCondition);
     }
 
+    /**
+     * 환자정보를 조건에따라 페이징 처리하여 가져옵니다
+     * @param searchCondition 조회 조건
+     * @param pageable 페이징
+     * @return 페이징된 환자정보리스트
+     */
     public Page<PatientDto> getPatients(SearchCondition searchCondition, Pageable pageable) {
         return patientRepository.findBySearchConditionAndPageable(searchCondition, pageable);
     }
 
+    /**
+     * 환자정보를 수정합니다.
+     * @param id 환자 아이디
+     * @param patientDto 수정할 환자정보
+     * @return 환자정보DTO
+     */
     public PatientDto updatePatient(Long id, PatientDto patientDto) {
         Patient patient = patientRepository.findById(id).orElseThrow(NotFoundPatientException::new);
         Patient updatedPatient = patientRepository.save(patient.updatePatient(patientDto));
@@ -133,6 +168,11 @@ public class PatientService {
                 .build();
     }
 
+    /**
+     * 환자번호를 랜덤으로 생성하고 중복을 학인하여 출력합니다.
+     * @param hospital 병원정보
+     * @return 랜덤키값
+     */
     public String checkPatientNo(Hospital hospital) {
         String patientNo = PatientNoGenerator.generate();
         if (!patientRepository.existsByHospitalAndPatientNo(hospital, patientNo)) {

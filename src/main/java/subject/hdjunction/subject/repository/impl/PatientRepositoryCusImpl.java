@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import subject.hdjunction.subject.domain.Patient;
-import subject.hdjunction.subject.domain.QCode;
 import subject.hdjunction.subject.dto.PatientDto;
 import subject.hdjunction.subject.repository.PatientRepositoryCus;
 import subject.hdjunction.subject.repository.SearchCondition;
@@ -18,7 +17,7 @@ import subject.hdjunction.subject.repository.SearchCondition;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.hasText;
-import static subject.hdjunction.subject.domain.QCode.*;
+import static subject.hdjunction.subject.domain.QCode.code1;
 import static subject.hdjunction.subject.domain.QPatient.patient;
 import static subject.hdjunction.subject.domain.QVisit.visit;
 

@@ -16,29 +16,39 @@ import java.util.List;
 @Getter
 public class PatientDto {
 
+    // 환자 아이디
     final private Long id;
 
+    // 병원 아이디
     final private Long hospitalId;
 
+    // 환자명
     final private String patientName;
 
+    // 환자 등록 번호
     final private String patientNo;
 
+    // 성별 코드
     final private String genderCode;
 
+    // 성별 명
     final private String genderName;
 
+    // 생년월일
     final private String birthDate;
 
+    // 휴대전화번호
     final private String phoneNumber;
 
-    private List<VisitDto> visitDtos;
+    // 방문 리스트
+    private List<VisitDto> visits;
 
+    // 최근 방문 일자
     private LocalDateTime lastReceptionDateTime;
 
     public void addVisitDtos(List<VisitDto> visitDtos) {
-        this.visitDtos = new ArrayList<>();
-        this.visitDtos.addAll(visitDtos);
+        this.visits = new ArrayList<>();
+        this.visits.addAll(visitDtos);
     }
 
     public void setLastReceptionDateTime(LocalDateTime lastReceptionDateTime) {

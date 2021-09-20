@@ -31,12 +31,11 @@ public class Visit {
     private Patient patient;
 
     // 접수일시
-
     @Column(name = "rcptn_dt")
     private LocalDateTime receptionDateTime;
 
     // 방문상태코드
-    @Column(name = "vst_st_cd")
+    @Column(name = "vst_st_cd", length = 10)
     private String visitStateCode;
 
     public Visit updatePatient(VisitDto visitDto) {

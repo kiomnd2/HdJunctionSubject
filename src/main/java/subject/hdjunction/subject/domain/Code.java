@@ -13,14 +13,19 @@ import javax.persistence.*;
 @IdClass(CodeId.class)
 public class Code {
 
+    // 코드그룹
     @Id
     @JoinColumn(name = "cd_grp_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private CodeGroup group;
 
+    // 코드
     @Id
+    @Column(name = "cd", length = 10)
     private String code;
 
+    // 코드명
+    @Column(name = "cd_nm", length = 20)
     private String codeName;
 
     @Builder
