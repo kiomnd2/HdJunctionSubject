@@ -107,7 +107,7 @@ class PatientControllerTest {
 
         for (int i=0 ; i< 10 ; i++) {
             LocalDateTime receptionDateTime = originReceptionDateTime.minusDays(i);
-            final String visitStateCode = Integer.toString(i);
+            final String visitStateCode = "1";
             Visit visit = Visit.builder()
                     .receptionDateTime(receptionDateTime)
                     .visitStateCode(visitStateCode)

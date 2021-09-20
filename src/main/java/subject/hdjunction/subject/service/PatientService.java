@@ -100,6 +100,7 @@ public class PatientService {
                         .patientId(patient.getId())
                         .receptionDateTime(visit.getReceptionDateTime())
                         .visitStateCode(visit.getVisitStateCode())
+                        .visitStateName(codeManager.getCodeName(CodeGroupConstant.VISIT,visit.getVisitStateCode()))
                         .build()).collect(Collectors.toList());
 
         PatientDto patientDto = PatientDto.builder()

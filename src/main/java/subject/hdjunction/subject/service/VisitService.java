@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import subject.hdjunction.subject.consts.CodeGroupConstant;
 import subject.hdjunction.subject.domain.Hospital;
 import subject.hdjunction.subject.domain.Patient;
 import subject.hdjunction.subject.domain.Visit;
@@ -26,6 +27,8 @@ public class VisitService {
 
     final private HospitalRepository hospitalRepository;
 
+    final private CodeManager codeManager;
+
     /**
      * 방문 접수 정보를 등록합니다
      * @param visitDto 방문정보DTO
@@ -42,13 +45,15 @@ public class VisitService {
                 .receptionDateTime(visitDto.getReceptionDateTime())
                 .hospital(hospital)
                 .patient(patient)
-                .visitStateCode(visitDto.getVisitStateCode()).build();
+                .visitStateCode(visitDto.getVisitStateCode())
+                .build();
 
         Visit savedVisits = visitRepository.save(visits);
 
         return VisitDto.builder()
                 .id(savedVisits.getId())
                 .visitStateCode(savedVisits.getVisitStateCode())
+                .visitStateName(codeManager.getCodeName(CodeGroupConstant.VISIT,savedVisits.getVisitStateCode()))
                 .hospitalId(savedVisits.getHospital().getId())
                 .patientId(savedVisits.getPatient().getId())
                 .receptionDateTime(savedVisits.getReceptionDateTime())
@@ -66,6 +71,7 @@ public class VisitService {
         return VisitDto.builder()
                 .id(visit.getId())
                 .visitStateCode(visit.getVisitStateCode())
+                .visitStateName(codeManager.getCodeName(CodeGroupConstant.VISIT,visit.getVisitStateCode()))
                 .receptionDateTime(visit.getReceptionDateTime())
                 .patientId(visit.getPatient().getId())
                 .hospitalId(visit.getHospital().getId())
@@ -82,11 +88,12 @@ public class VisitService {
         Visit visit = visitRepository.findById(visitId)
                 .orElseThrow(NotFoundVisitException::new);
 
-        Visit updatedVisit = visit.updatePatient(visitDto);
-        visitRepository.save(updatedVisit);
+        Visit toUpdatedVisit = visit.updatePatient(visitDto);
+        Visit updatedVisit = visitRepository.save(toUpdatedVisit);
         return VisitDto.builder()
                 .id(updatedVisit.getId())
                 .visitStateCode(updatedVisit.getVisitStateCode())
+                .visitStateName(codeManager.getCodeName(CodeGroupConstant.VISIT,updatedVisit.getVisitStateCode()))
                 .receptionDateTime(updatedVisit.getReceptionDateTime())
                 .patientId(updatedVisit.getPatient().getId())
                 .hospitalId(updatedVisit.getHospital().getId())

@@ -29,12 +29,19 @@ public class VisitDto {
     // 방문상태코드
     final private String visitStateCode;
 
+    // 방문상태코드
+    final private String visitStateName;
+
+
+
     @Builder
-    public VisitDto(Long id, Long hospitalId, Long patientId, LocalDateTime receptionDateTime, String visitStateCode) {
+    public VisitDto(Long id, Long hospitalId, Long patientId, LocalDateTime receptionDateTime
+            , String visitStateCode, String visitStateName) {
         this.id = id;
         this.hospitalId = hospitalId;
         this.patientId = patientId;
         this.receptionDateTime = receptionDateTime;
         this.visitStateCode = visitStateCode;
+        this.visitStateName = visitStateName;
     }
 }

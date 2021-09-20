@@ -60,7 +60,7 @@ public class PatientRepositoryCusImpl implements PatientRepositoryCus {
                         patient.patientName,
                         patient.patientNo,
                         patient.genderCode,
-                        code1.codeName,
+                        code1.codeName.as("genderName"),
                         patient.birthDate,
                         patient.phoneNumber,
                         visit.receptionDateTime.max().as("lastReceptionDateTime")
