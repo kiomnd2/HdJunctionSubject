@@ -28,66 +28,7 @@ import java.nio.file.Paths;
 @Service
 public class CodeManager {
 
-
-
     final private CodeRepository codeRepository;
-
-    final private CodeGroupRepository codeGroupRepository;
-
-    /**
-     * 코드 데이터를 가져와 데이터베이스에 입력합니다
-     */
-    @PostConstruct
-    public void initTransferData() {
-        saveCodeGroup();
-        saveCode();
-    }
-
-    /**
-     * 코드 그룹 데이터를 입력합니다
-     */
-    @Transactional(readOnly = false)
-    public void saveCodeGroup() {
-        Resource codeGroupResource = new ClassPathResource("code_group.csv");
-
-        try(BufferedReader br = new BufferedReader(
-                Files.newBufferedReader(Paths.get(codeGroupResource.getURI()), StandardCharsets.UTF_8))) {
-            final CSVReader reader = new CSVReaderBuilder(br).withSkipLines(1).build();
-            String[] data;
-            while((data = reader.readNext()) != null) {
-                codeGroupRepository.save(CodeGroup.builder()
-                        .codeGroup(data[0])
-                        .codeGroupName(data[1])
-                        .description(data[2])
-                        .build());
-            }
-        } catch (IOException e) {
-            throw new CodeInjectionException();
-        }
-    }
-
-    /**
-     * 코드 데이터를 입력 받습니다
-     */
-    private void saveCode() {
-        Resource codeGroupResource = new ClassPathResource("code.csv");
-
-        try(BufferedReader br = new BufferedReader(
-                Files.newBufferedReader(Paths.get(codeGroupResource.getURI()), StandardCharsets.UTF_8))) {
-            final CSVReader reader = new CSVReaderBuilder(br).withSkipLines(1).build();
-            String[] data;
-            while((data = reader.readNext()) != null) {
-                CodeGroup codeGroup = codeGroupRepository.findById(data[0]).orElseThrow(NotFoundCodeGroupException::new);
-                codeRepository.save(Code.builder()
-                        .group(codeGroup)
-                        .code(data[1])
-                        .codeName(data[2])
-                        .build());
-            }
-        } catch (IOException e) {
-            throw new CodeInjectionException();
-        }
-    }
 
     /**
      * 코드를 코드명으로 변환하여 출력합니다
