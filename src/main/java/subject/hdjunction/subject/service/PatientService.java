@@ -110,8 +110,8 @@ public class PatientService {
                 .patientNo(patient.getPatientNo())
                 .hospitalId(patient.getHospital().getId())
                 .genderCode(patient.getGenderCode())
-                .genderName(codeManager.getCodeName(CodeGroupConstant.GENDER
-                        , patient.getGenderCode()))
+                .genderName(codeManager.getCodeName(CodeGroupConstant.GENDER,
+                        patient.getGenderCode()))
                 .birthDate(patient.getBirthDate())
                 .build();
         patientDto.addVisitDtos(visitInfos);
@@ -153,6 +153,7 @@ public class PatientService {
      * @param patientDto 수정할 환자정보
      * @return 환자정보DTO
      */
+    @Transactional(readOnly = false)
     public PatientDto updatePatient(Long id, PatientDto patientDto) {
         Patient patient = patientRepository.findById(id).orElseThrow(NotFoundPatientException::new);
         Patient updatedPatient = patientRepository.save(patient.updatePatient(patientDto));
@@ -162,8 +163,8 @@ public class PatientService {
                 .hospitalId(updatedPatient.getHospital().getId())
                 .birthDate(updatedPatient.getBirthDate())
                 .genderCode(updatedPatient.getGenderCode())
-                .genderName(codeManager.getCodeName(CodeGroupConstant.GENDER
-                        , updatedPatient.getGenderCode()))
+                .genderName(codeManager.getCodeName(CodeGroupConstant.GENDER,
+                        updatedPatient.getGenderCode()))
                 .patientNo(updatedPatient.getPatientNo())
                 .phoneNumber(updatedPatient.getPhoneNumber())
                 .build();
