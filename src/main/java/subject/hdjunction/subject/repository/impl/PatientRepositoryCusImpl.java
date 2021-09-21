@@ -44,9 +44,7 @@ public class PatientRepositoryCusImpl implements PatientRepositoryCus {
                 .where(
                         patientNameEq(searchCondition.getPatientName()),
                         patientNoEq(searchCondition.getPatientNo()),
-                        birthDateEq(searchCondition.getBirthDate()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
+                        birthDateEq(searchCondition.getBirthDate()));
 
         return PageableExecutionUtils.getPage(contents, pageable, count::fetchCount);
     }
@@ -77,15 +75,15 @@ public class PatientRepositoryCusImpl implements PatientRepositoryCus {
     }
 
     private BooleanExpression patientNameEq(String patientName) {
-        return hasText(patientName) ? patient.patientName.eq(patientName) : null;
+        return hasText(patientName) ? patient.patientName.contains(patientName) : null;
     }
 
     private BooleanExpression patientNoEq(String patientNo) {
-        return hasText(patientNo) ? patient.patientNo.eq(patientNo) : null;
+        return hasText(patientNo) ? patient.patientNo.contains(patientNo) : null;
     }
 
     private BooleanExpression birthDateEq(String birthDate) {
-        return hasText(birthDate) ? patient.birthDate.eq(birthDate) : null;
+        return hasText(birthDate) ? patient.birthDate.contains(birthDate) : null;
     }
 
 
