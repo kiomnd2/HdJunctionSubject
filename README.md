@@ -16,6 +16,7 @@ $ java -jar ./target/uploader-1.0.jar
 * querydsl
 * spring-docs
 * lombok
+* java 1.8
 ...
 
 
