@@ -1,7 +1,7 @@
 package subject.hdjunction.subject.codes;
 
 public enum Codes {
-    S0000("S0090", "정상"),
+    S0000("S0000", "정상"),
     D2000("D2000", "삭제"),
     E4000("E4000", "오류");
 
