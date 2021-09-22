@@ -1,4 +1,5 @@
 # Patient-Manager
+> 병원 및 환자의 정보를 저장하고 조회합니다.
 
 ## 0 빌드 및 실행
     
@@ -19,8 +20,7 @@ $ java -jar ./target/uploader-1.0.jar
 * java 1.8
 ...
 
-
-## 2. Api
+## 2. Docs
 ```
 http://localhost:8080/docs/index.html
 ```
