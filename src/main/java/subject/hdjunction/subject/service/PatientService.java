@@ -114,7 +114,7 @@ public class PatientService {
                         patient.getGenderCode()))
                 .birthDate(patient.getBirthDate())
                 .build();
-        patientDto.addVisitDtos(visitInfos);
+        patientDto.addVisits(visitInfos);
         if (visitInfos.size() > 0) patientDto.setLastReceptionDateTime(visitInfos.get(0).getReceptionDateTime());
         return patientDto;
     }

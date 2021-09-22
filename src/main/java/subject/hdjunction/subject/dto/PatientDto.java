@@ -46,9 +46,9 @@ public class PatientDto {
     // 최근 방문 일자
     private LocalDateTime lastReceptionDateTime;
 
-    public void addVisitDtos(List<VisitDto> visitDtos) {
-        this.visits = new ArrayList<>();
-        this.visits.addAll(visitDtos);
+    public void addVisits(List<VisitDto> visits) {
+        if (this.visits == null) this.visits = new ArrayList<>();
+        this.visits.addAll(visits);
     }
 
     public void setLastReceptionDateTime(LocalDateTime lastReceptionDateTime) {
